@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar/Navbar";
 import SearchBar from "@/components/SearchBar/SearchBar";
 import BottomBar from "@/components/BottomBar/BottomBar";
 import CategoryList from "@/components/CategoryList/CategoryList";
-import Banner from "@/components/Banner";
+import PromoCrousel from "@/components/PromoCrousel";
 import DealCard from "@/components/DealCard";
 import SpecialOffer from "@/components/SpecialOffer";
 import TrendingProducts from "@/components/TrendingProduct";
@@ -21,7 +21,7 @@ export default function Home() {
             <SearchBar />
           </View>
           <CategoryList />
-          <Banner />
+          <PromoCrousel />
           <Text style={styles.sectionTitle}>Deal of the Day</Text>
           <TouchableNativeFeedback onPress={() => router.push("/(sample)/")}>
             <Text > Go SAMPLE</Text>
