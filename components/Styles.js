@@ -23,8 +23,62 @@ const styles = StyleSheet.create({
   specialOffer: { backgroundColor: "#FFD700", padding: 15, borderRadius: 10, marginTop: 10, alignItems: "center" },
   offerText: { fontSize: 16, fontWeight: "bold" },
 
-  trendingSection: { marginTop: 10 },
-  sectionTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 5 },
+  trendingSection: {
+    marginVertical: 10,
+    paddingVertical: 10,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
+
+  productCard: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    overflow: 'hidden',
+    width: 160,  // Adjust based on your needs
+    marginRight: 12,
+    marginBottom: 12,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+
+  productInfo: {
+    padding: 12,
+  },
+
+  productDescription: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 8,
+  },
+
+  productDetails: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
+  productPrice: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  ratingText: {
+    fontSize: 12,
+    color: '#666',
+  },
 });
 
 export default styles;

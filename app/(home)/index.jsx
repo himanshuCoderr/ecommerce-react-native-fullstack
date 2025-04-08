@@ -14,8 +14,17 @@ import { router } from 'expo-router';
 export default function Home() {
   return (
     <View style={{ flex: 1, backgroundColor: "#FDFDFD" }}>
-      <ScrollView style={[styles.container, { paddingBottom: 70 }]}>
-        <View style={{ backgroundColor: "#FDFDFD", width: "100%", position: "relative" }}>
+      <ScrollView 
+        style={[styles.container, { paddingBottom: 90 }]}
+        contentContainerStyle={{ paddingBottom: 90 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={{ 
+          backgroundColor: "#FDFDFD", 
+          width: "100%", 
+          position: "relative",
+          paddingBottom: 20
+        }}>
           <View style={{ padding: 20, backgroundColor: "#FDFDFD" }}>
             <Navbar />
             <SearchBar />
@@ -29,13 +38,18 @@ export default function Home() {
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <DealCard title="Women Printed Kurta" price="1500" discount="40%" rating="4.5" />
             <DealCard title="HRX Sneakers" price="2499" discount="50%" rating="4.7" />
+            <DealCard title="HRX Sneakers" price="2499" discount="50%" rating="4.7" />
+            <DealCard title="HRX Sneakers" price="2499" discount="50%" rating="4.7" />
+            <DealCard title="HRX Sneakers" price="2499" discount="50%" rating="4.7" />
+            <DealCard title="HRX Sneakers" price="2499" discount="50%" rating="4.7" />
+            <DealCard title="HRX Sneakers" price="2499" discount="50%" rating="4.7" />
+            <DealCard title="HRX Sneakers" price="2499" discount="50%" rating="4.7" />
+            <DealCard title="HRX Sneakers" price="2499" discount="50%" rating="4.7" />
+            
           </ScrollView>
           <SpecialOffer />
           <TrendingProducts />
-          <TrendingProducts />
-          <TrendingProducts />
-          <TrendingProducts />
-          <TrendingProducts />
+          <PromoCrousel />  
         </View>
       </ScrollView>
       <BottomBar />

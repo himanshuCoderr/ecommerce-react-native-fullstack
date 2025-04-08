@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "app/(home)/_layout.jsx", "app/(cart)/_layout.jsx"  ]
+, "app/(home)/_layout.jsx", "app/(cart)/_layout.jsx", "components/BottomBar/BottomBar.jsx"  ]
 }

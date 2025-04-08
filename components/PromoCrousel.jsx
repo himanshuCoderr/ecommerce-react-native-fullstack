@@ -7,14 +7,18 @@ const data = [
     title: '50-40% OFF',
     subtitle: 'Now in (product)\nAll colours',
     buttonText: 'Shop Now',
-    // image: require("@/assets/images/banner1.png"),
+    image: {
+      uri: "https://images.unsplash.com/photo-1611403570720-162d8829689a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8b2ZmZXJzfGVufDB8fDB8fHww",
+    },
   },
   {
     id: '2',
     title: '20-40% OFF',
     subtitle: 'Now in (product)\nAll colours',
     buttonText: 'Shop Now',
-    // image: require("@/assets/images/banner2.png"),
+    image: {
+      uri: "https://images.unsplash.com/photo-1611403570720-162d8829689a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8b2ZmZXJzfGVufDB8fDB8fHww",
+    },
   },
 ];
 const { width } = Dimensions.get("window");
@@ -27,7 +31,7 @@ const Banner = () => {
 
   const renderItem = ({ item }) => {
     return (
-      <View style={styles.card}>
+      <View style={styles.card} >
         <View style={styles.textContainer}>
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.subtitle}>{item.subtitle}</Text>

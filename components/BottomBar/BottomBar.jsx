@@ -24,7 +24,7 @@ const BottomBar = () => {
       shadowRadius: 2,
     }} >
       <TouchableNativeFeedback onPress={() => {
-        router.push("/")
+        router.push("/(home)/")
       }} >
         <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 5 }}   >
           <Image source={require("../../assets/images/home.png")} />
@@ -47,7 +47,7 @@ const BottomBar = () => {
         <Image source={require("../../assets/images/shopping-cart.png")} />
       </View>
       <TouchableNativeFeedback onPress={() => {
-        router.push("/Search")
+        router.push("/(search)/")
       }} >
         <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 5 }} >
           <Image source={require("../../assets/images/search.png")} />
