@@ -4,7 +4,6 @@ import Navbar from "@/components/Navbar/Navbar";
 import SearchBar from "@/components/SearchBar/SearchBar";
 import BottomBar from "@/components/BottomBar/BottomBar";
 import CategoryList from "@/components/CategoryList/CategoryList";
-import Banner from "@/components/Banner";
 import DealCard from "@/components/DealCard";
 import SpecialOffer from "@/components/SpecialOffer";
 import TrendingProducts from "@/components/TrendingProduct";
