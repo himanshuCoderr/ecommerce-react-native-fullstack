@@ -9,10 +9,11 @@ import SpecialOffer from "@/components/SpecialOffer";
 import TrendingProducts from "@/components/TrendingProduct";
 import { ScrollView } from "react-native";
 import Home from './(home)/index'
+import LoginScreen from './(login)/index'
 export default function Index() {
   return (
     <View style={{ flex: 1, backgroundColor: "#FDFDFD" }}>
-      <Home />
+      <LoginScreen />
     </View>
   );
 }

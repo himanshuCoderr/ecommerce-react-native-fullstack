@@ -1,6 +1,8 @@
 import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
 import { useState } from 'react';
 import BottomBar from "@/components/BottomBar/BottomBar";
+import ProductCard from "@/components/ProductCard/ProductCard";
+import { router } from "expo-router";
 function ProductDetails() {
     const [selectedSize, setSelectedSize] = useState('7UK');
     const sizes = ['6 UK', '7 UK', '8 UK', '9 UK', '10 UK'];
@@ -114,9 +116,95 @@ function ProductDetails() {
                         {/* <Image source={require('../../assets/images/cart-icon.png')} style={styles.buttonIcon} /> */}
                         <Text style={styles.buttonText}>Go to cart</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buyButton}>
+                    <TouchableOpacity style={styles.buyButton} onPress={()=>{
+                        router.push("/(cart)/")
+                    }} >
                         <Text style={styles.buyButtonText}>Buy Now</Text>
                     </TouchableOpacity>
+                </View>
+
+                <View style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginTop: 20,
+                    paddingHorizontal: 20
+                }}>
+                    <View style={{ flexDirection: "column", gap: 10 }}>
+                        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Similar Products</Text>
+                        <Text style={{ fontSize: 16, fontWeight: "bold" }}>52,000+ Products</Text>
+                    </View>
+
+                    <View style={{ flexDirection: "row", gap: 10 }}>
+                        <TouchableOpacity
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: 10,
+                                backgroundColor: "white",
+                                borderRadius: 10,
+                                padding: 10,
+                                elevation: 2,  // Add shadow for Android
+                                shadowColor: '#000',  // Add shadow for iOS
+                                shadowOffset: { width: 0, height: 2 },
+                                shadowOpacity: 0.1,
+                                shadowRadius: 4
+                            }}
+                        >
+                            <Text style={{ fontSize: 16, fontWeight: "bold" }}>Sort</Text>
+                            <Image source={require("../../assets/images/sort-icon.png")} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: 10,
+                                backgroundColor: "white",
+                                borderRadius: 10,
+                                padding: 10,
+                                elevation: 2,
+                                shadowColor: '#000',
+                                shadowOffset: { width: 0, height: 2 },
+                                shadowOpacity: 0.1,
+                                shadowRadius: 4
+                            }}
+                        >
+                            <Text style={{ fontSize: 16, fontWeight: "bold" }}>Filter</Text>
+                            <Image source={require("../../assets/images/filter-icon.png")} />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <View style={{ flexDirection: "row", gap: 10, flexWrap: "wrap", justifyContent: "space-between",
+                    marginTop: 20,
+                    paddingHorizontal: 20 }}>
+                    <ProductCard
+                        image="https://images.unsplash.com/photo-1619222815378-31e8614d12a7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDN8fGt1cnRpc3xlbnwwfHwwfHx8MA%3D%3D"
+                        title="Black Winter..."
+                        description="Autumn And Winter Casual cotton-padded jacket..."
+                        price="499"
+                        rating="4.5"
+                    />
+                    <ProductCard
+                        image="https://images.unsplash.com/photo-1619222815378-31e8614d12a7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDN8fGt1cnRpc3xlbnwwfHwwfHx8MA%3D%3D"
+                        title="Black Winter..."
+                        description="Autumn And Winter Casual cotton-padded jacket..."
+                        price="499"
+                        rating="4.5"
+                    />
+                    <ProductCard
+                        image="https://images.unsplash.com/photo-1619222815378-31e8614d12a7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDN8fGt1cnRpc3xlbnwwfHwwfHx8MA%3D%3D"
+                        title="Black Winter..."
+                        description="Autumn And Winter Casual cotton-padded jacket..."
+                        price="499"
+                        rating="4.5"
+                    />
+                    <ProductCard
+                        image="https://images.unsplash.com/photo-1619222815378-31e8614d12a7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDN8fGt1cnRpc3xlbnwwfHwwfHx8MA%3D%3D"
+                        title="Black Winter..."
+                        description="Autumn And Winter Casual cotton-padded jacket..."
+                        price="499"
+                        rating="4.5"
+                    />
                 </View>
 
             </ScrollView>
