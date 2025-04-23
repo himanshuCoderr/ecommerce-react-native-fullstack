@@ -15,7 +15,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { saveSecure } from '../../utilies/SecureStore/SecureStore';
 import { db } from '../../firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, setDoc, doc } from 'firebase/firestore';
 
 export default function SignUpScreen() {
   const [formData, setFormData] = useState({
@@ -43,17 +43,11 @@ export default function SignUpScreen() {
             createdAt: new Date(),
           };
 
-          await addDoc(collection(db, 'users'), userData);
+          await setDoc(doc(db, 'users', userCredential.user.uid), userData);
           
           console.log('User created:', userCredential.user);
           
-          await saveSecure('userEmail', userCredential.user.email);
-          await saveSecure('userName', userData.name);
-          await saveSecure('userUid', userCredential.user.uid);
-          await saveSecure('accessToken', userCredential.user.accessToken);
-          await saveSecure('refreshToken', userCredential.user.refreshToken);
-          
-          router.push('/(home)');
+          router.push('/(login)');
         })
         .catch((error) => {
           console.error('Error creating user:', error);

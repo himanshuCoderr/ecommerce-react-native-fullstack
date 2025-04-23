@@ -12,6 +12,12 @@ import {
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 // import Colors from '../../constants/Colors';
+import { auth } from '../../firebase';
+import { saveSecure } from '../../utilies/SecureStore/SecureStore';
+import { getDoc, doc } from 'firebase/firestore';
+import { db } from '../../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+
 
 export default function LoginScreen() {
   const [credentials, setCredentials] = useState({
@@ -21,10 +27,37 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = () => {
-    // TODO: Implement actual login logic here
     if (credentials.email && credentials.password) {
-      // For now, just navigate to home
-      router.push('/(home)');
+      signInWithEmailAndPassword(auth, credentials.email, credentials.password)
+        .then(async (userCredential) => {
+          try {
+            // Get user data from Firestore
+            const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
+            console.log(userDoc.data());
+
+
+            if (!userDoc.exists()) {
+              console.error('User document not found');
+              return;
+            }
+
+            const userData = userDoc.data();
+            
+            // Store user data in secure storage
+            await saveSecure('userEmail', userCredential.user.email);
+            await saveSecure('userName', userData.name);
+            await saveSecure('userUid', userCredential.user.uid);
+            await saveSecure('accessToken', userCredential.user.accessToken);
+            // Navigate to home screen
+            router.push('/(home)');
+          } catch (error) {
+            console.error('Error fetching user data:', error);
+          }
+        })
+        .catch((error) => {
+          console.error('Login error:', error.message);
+          // You might want to show an error message to the user here
+        });
     }
   };
 
