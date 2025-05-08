@@ -1,13 +1,26 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import styles from "../Styles";
 import { router } from "expo-router";
-export default function ProductCard({ image, title, description, price, rating }) {
+
+export default function ProductCard({ image, title, description, price, rating, id }) {
+    const handleProductPress = () => {
+        router.push({
+            pathname: "/(productDetails)/",
+            params: {
+                id,
+                image,
+                title,
+                description,
+                price,
+                rating
+            }
+        });
+    };
+
     return (
-        <TouchableOpacity style={styles.productCard} onPress={() => {
-            router.push("/(productDetails)/")
-        }}>
+        <TouchableOpacity style={styles.productCard} onPress={handleProductPress}>
             <Image 
-                source={ {uri: "https://images.unsplash.com/photo-1619222815378-31e8614d12a7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDN8fGt1cnRpc3xlbnwwfHwwfHx8MA%3D%3D"}} 
+                source={{ uri: image }} 
                 style={styles.productImage}
                 resizeMode="cover"
             />

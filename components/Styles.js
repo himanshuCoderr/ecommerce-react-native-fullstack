@@ -13,12 +13,116 @@ const styles = StyleSheet.create({
   button: { marginTop: 10, backgroundColor: "#fff", padding: 8, borderRadius: 5 },
   buttonText: { color: "#FF4081", fontWeight: "bold" },
 
-  dealCard: { backgroundColor: "#fff", padding: 10, borderRadius: 8, marginRight: 10, width: 150 },
-  productImage: { width: "100%", height: 100, borderRadius: 5 },
-  productTitle: { fontSize: 14, fontWeight: "bold", marginTop: 5 },
-  price: { fontSize: 14, color: "#333" },
-  discount: { color: "red" },
-  rating: { fontSize: 12, marginTop: 2 },
+  dealCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 8,
+    marginRight: 16,
+    marginVertical: 8,
+    width: 180,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    position: 'relative',
+  },
+  
+  discountBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    backgroundColor: '#FF4B4B',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    zIndex: 1,
+  },
+  
+  discountBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  
+  productImage: {
+    width: '100%',
+    height: 160,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  
+  productInfo: {
+    padding: 8,
+  },
+  
+  brandName: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 4,
+    fontWeight: '500',
+  },
+  
+  productTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#222',
+    marginBottom: 8,
+    height: 40,
+  },
+  
+  priceContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  
+  price: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#222',
+  },
+  
+  ratingContainer: {
+    backgroundColor: '#FFF9E5',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  
+  rating: {
+    fontSize: 12,
+    color: '#FFB800',
+    fontWeight: '600',
+  },
+  
+  bottomInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  
+  discount: {
+    fontSize: 12,
+    color: '#00A36C',
+    fontWeight: '600',
+  },
+  
+  stockWarning: {
+    fontSize: 12,
+    color: '#FF4B4B',
+    fontWeight: '500',
+  },
+  
+  outOfStock: {
+    fontSize: 12,
+    color: '#FF0000',
+    fontWeight: '600',
+  },
 
   specialOffer: { backgroundColor: "#FFD700", padding: 15, borderRadius: 10, marginTop: 10, alignItems: "center" },
   offerText: { fontSize: 16, fontWeight: "bold" },
@@ -48,10 +152,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
 
-  productInfo: {
-    padding: 12,
-  },
-
   productDescription: {
     fontSize: 14,
     color: '#666',
@@ -62,22 +162,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-
-  productPrice: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-
-  ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-
-  ratingText: {
-    fontSize: 12,
-    color: '#666',
   },
 });
 

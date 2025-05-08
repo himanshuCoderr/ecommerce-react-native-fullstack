@@ -1,12 +1,96 @@
 import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BottomBar from "@/components/BottomBar/BottomBar";
 import ProductCard from "@/components/ProductCard/ProductCard";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import { doc, getDoc, collection, query, where, limit, getDocs } from 'firebase/firestore';
+import { db } from '@/firebase';
+
 function ProductDetails() {
+    const params = useLocalSearchParams();
     const [selectedSize, setSelectedSize] = useState('7UK');
-    const sizes = ['6 UK', '7 UK', '8 UK', '9 UK', '10 UK'];
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [product, setProduct] = useState(null);
+    const [similarProducts, setSimilarProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProductDetails = async () => {
+            if (params.id) {
+                try {
+                    const docRef = doc(db, "products", params.id);
+                    const docSnap = await getDoc(docRef);
+                    
+                    if (docSnap.exists()) {
+                        setProduct({ id: docSnap.id, ...docSnap.data() });
+                        
+                        // Fetch similar products
+                        const productsRef = collection(db, "products");
+                        const q = query(
+                            productsRef,
+                            where("category", "==", docSnap.data().category),
+                            where("id", "!=", docSnap.id),
+                            limit(4)
+                        );
+                        
+                        const similarSnapshot = await getDocs(q);
+                        const similarData = similarSnapshot.docs.map(doc => ({
+                            id: doc.id,
+                            ...doc.data()
+                        }));
+                        setSimilarProducts(similarData);
+                    }
+                } catch (error) {
+                    console.error("Error fetching product details:", error);
+                }
+            } else {
+                // If no ID is provided, use the params directly
+                setProduct(params);
+                
+                // Fetch similar products if category is available
+                if (params.category) {
+                    try {
+                        const productsRef = collection(db, "products");
+                        const q = query(
+                            productsRef,
+                            where("category", "==", params.category),
+                            limit(4)
+                        );
+                        
+                        const similarSnapshot = await getDocs(q);
+                        const similarData = similarSnapshot.docs.map(doc => ({
+                            id: doc.id,
+                            ...doc.data()
+                        }));
+                        setSimilarProducts(similarData);
+                    } catch (error) {
+                        console.error("Error fetching similar products:", error);
+                    }
+                }
+            }
+            setLoading(false);
+        };
+
+        fetchProductDetails();
+    }, [params.id]);
+
+    if (loading) {
+        return (
+            <View style={styles.container}>
+                <Text>Loading product details...</Text>
+            </View>
+        );
+    }
+
+    if (!product) {
+        return (
+            <View style={styles.container}>
+                <Text>Product not found</Text>
+            </View>
+        );
+    }
+
+    // const sizes = ['6 UK', '7 UK', '8 UK', '9 UK', '10 UK'];
 
     return (
         <View style={styles.container}>
@@ -14,7 +98,7 @@ function ProductDetails() {
                 {/* Product Images Carousel */}
                 <View style={styles.imageContainer}>
                     <Image
-                        source={{ uri: "https://images.unsplash.com/photo-1619222815378-31e8614d12a7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDN8fGt1cnRpc3xlbnwwfHwwfHx8MA%3D%3D" }}
+                        source={{ uri: product.image || product.thumbnail }}
                         style={styles.productImage}
                         resizeMode="cover"
                     />
@@ -36,7 +120,7 @@ function ProductDetails() {
                     <Text style={styles.selectedSize}>Size: {selectedSize}</Text>
 
                     {/* Size Selection */}
-                    <View style={styles.sizeContainer}>
+                    {/* <View style={styles.sizeContainer}>
                         {sizes.map((size) => (
                             <TouchableOpacity
                                 key={size}
@@ -52,43 +136,46 @@ function ProductDetails() {
                                 ]}>{size}</Text>
                             </TouchableOpacity>
                         ))}
-                    </View>
+                    </View> */}
 
                     {/* Product Title and Rating */}
-                    <Text style={styles.title}>Nike Sneakers</Text>
-                    <Text style={styles.subtitle}>Vision Alta Men's Shoes Size (All Colours)</Text>
+                    <Text style={styles.title}>{product.title || product.name}</Text>
+                    <Text style={styles.subtitle}>{product.description}</Text>
                     <View style={styles.ratingContainer}>
-                        <Text style={styles.rating}>★★★★☆ 56,890</Text>
+                        <Text style={styles.rating}>★★★★☆ {product.rating}</Text>
                     </View>
 
                     {/* Price */}
                     <View style={styles.priceContainer}>
-                        <Text style={styles.price}>₹1,500</Text>
-                        <Text style={styles.originalPrice}>₹2,999</Text>
-                        <Text style={styles.discount}>50% Off</Text>
+                        <Text style={styles.price}>₹{product.price}</Text>
+                        {product.originalPrice && (
+                            <>
+                                <Text style={styles.originalPrice}>₹{product.originalPrice}</Text>
+                                <Text style={styles.discount}>
+                                    {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% Off
+                                </Text>
+                            </>
+                        )}
                     </View>
 
                     {/* Product Details */}
                     <View style={styles.detailsContainer}>
                         <Text style={styles.detailsTitle}>Product Details</Text>
                         <Text style={styles.detailsText}>
-                            Perhaps the most iconic sneaker of all-time, this original "Chicago" colorway is the cornerstone to any sneaker collection. Made famous in 1985 by Michael Jordan, the shoe has stood the test of time, becoming the most famous colorway of the Air Jordan 1. This 2015 release saw the...
-                            <Text style={styles.moreText}>More</Text>
+                            {product.description}
+                            <Text style={styles.moreText}> More</Text>
                         </Text>
                     </View>
 
                     {/* Store and Policy Icons */}
                     <View style={styles.iconContainer}>
                         <View style={styles.iconItem}>
-                            {/* <Image source={require('../../assets/images/store-icon.png')} style={styles.icon} /> */}
                             <Text style={styles.iconText}>Nearest Store</Text>
                         </View>
                         <View style={styles.iconItem}>
-                            {/* <Image source={require('../../assets/images/vip-icon.png')} style={styles.icon} /> */}
                             <Text style={styles.iconText}>VIP</Text>
                         </View>
                         <View style={styles.iconItem}>
-                            {/* <Image source={require('../../assets/images/return-icon.png')} style={styles.icon} /> */}
                             <Text style={styles.iconText}>Return policy</Text>
                         </View>
                     </View>
@@ -102,23 +189,61 @@ function ProductDetails() {
                     {/* Bottom Actions */}
                     <View style={styles.actionContainer}>
                         <TouchableOpacity style={styles.similarButton}>
-                            {/* <Image source={require('../../assets/images/eye-icon.png')} style={styles.actionIcon} /> */}
                             <Text style={styles.actionText}>View Similar</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.compareButton}>
-                            {/* <Image source={require('../../assets/images/compare-icon.png')} style={styles.actionIcon} /> */}
                             <Text style={styles.actionText}>Add to Compare</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
+
+                {/* Similar Products Section */}
+                {similarProducts.length > 0 && (
+                    <View style={{
+                        paddingHorizontal: 20,
+                        paddingTop: 20,
+                        borderTopWidth: 8,
+                        borderTopColor: '#f5f5f5'
+                    }}>
+                        <Text style={{ 
+                            fontSize: 18, 
+                            fontWeight: "bold",
+                            marginBottom: 15
+                        }}>
+                            Similar Products
+                        </Text>
+                        
+                        <View style={{ 
+                            flexDirection: "row", 
+                            flexWrap: "wrap",
+                            gap: 10,
+                            justifyContent: "space-between"
+                        }}>
+                            {similarProducts.map((similarProduct) => (
+                                <View key={similarProduct.id} style={{ width: '48%' }}>
+                                    <ProductCard
+                                        id={similarProduct.id}
+                                        image={similarProduct.thumbnail}
+                                        title={similarProduct.title || similarProduct.name}
+                                        description={similarProduct.description}
+                                        price={similarProduct.price}
+                                        rating={similarProduct.rating}
+                                    />
+                                </View>
+                            ))}
+                        </View>
+                    </View>
+                )}
+
+                {/* Bottom Buttons */}
                 <View style={styles.bottomButtons}>
                     <TouchableOpacity style={styles.cartButton}>
-                        {/* <Image source={require('../../assets/images/cart-icon.png')} style={styles.buttonIcon} /> */}
                         <Text style={styles.buttonText}>Go to cart</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buyButton} onPress={()=>{
-                        router.push("/(cart)/")
-                    }} >
+                    <TouchableOpacity 
+                        style={styles.buyButton} 
+                        onPress={() => router.push("/(cart)/")}
+                    >
                         <Text style={styles.buyButtonText}>Buy Now</Text>
                     </TouchableOpacity>
                 </View>
@@ -174,44 +299,8 @@ function ProductDetails() {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <View style={{ flexDirection: "row", gap: 10, flexWrap: "wrap", justifyContent: "space-between",
-                    marginTop: 20,
-                    paddingHorizontal: 20 }}>
-                    <ProductCard
-                        image="https://images.unsplash.com/photo-1619222815378-31e8614d12a7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDN8fGt1cnRpc3xlbnwwfHwwfHx8MA%3D%3D"
-                        title="Black Winter..."
-                        description="Autumn And Winter Casual cotton-padded jacket..."
-                        price="499"
-                        rating="4.5"
-                    />
-                    <ProductCard
-                        image="https://images.unsplash.com/photo-1619222815378-31e8614d12a7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDN8fGt1cnRpc3xlbnwwfHwwfHx8MA%3D%3D"
-                        title="Black Winter..."
-                        description="Autumn And Winter Casual cotton-padded jacket..."
-                        price="499"
-                        rating="4.5"
-                    />
-                    <ProductCard
-                        image="https://images.unsplash.com/photo-1619222815378-31e8614d12a7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDN8fGt1cnRpc3xlbnwwfHwwfHx8MA%3D%3D"
-                        title="Black Winter..."
-                        description="Autumn And Winter Casual cotton-padded jacket..."
-                        price="499"
-                        rating="4.5"
-                    />
-                    <ProductCard
-                        image="https://images.unsplash.com/photo-1619222815378-31e8614d12a7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDN8fGt1cnRpc3xlbnwwfHwwfHx8MA%3D%3D"
-                        title="Black Winter..."
-                        description="Autumn And Winter Casual cotton-padded jacket..."
-                        price="499"
-                        rating="4.5"
-                    />
-                </View>
-
             </ScrollView>
-
-            {/* Bottom Buttons */}
             <BottomBar />
-
         </View>
     );
 }

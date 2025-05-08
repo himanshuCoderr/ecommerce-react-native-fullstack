@@ -11,7 +11,38 @@ import TrendingProducts from "@/components/TrendingProduct";
 import { ScrollView } from "react-native";
 import styles from '../../components/Styles';
 import { router } from 'expo-router';
+import { collection, getDocs, query, where, limit, orderBy } from 'firebase/firestore';
+import { db } from '@/firebase';
+
 export default function Home() {
+  const [discountedProducts, setDiscountedProducts] = React.useState([]);
+
+  async function getDiscountedProducts() {
+    try {
+      const productsRef = collection(db, "products");
+      const q = query(
+        productsRef,
+        where("discountPercentage", ">=", 18),
+        orderBy("discountPercentage", "desc"),
+        limit(10)
+      );
+
+      const querySnapshot = await getDocs(q);
+      const products = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      
+      setDiscountedProducts(products);
+    } catch (error) {
+      console.error("Error fetching discounted products:", error);
+    }
+  }
+
+  React.useEffect(() => {
+    getDiscountedProducts();
+  }, []);
+
   return (
     <View style={{ flex: 1, backgroundColor: "#FDFDFD" }}>
       <ScrollView 
@@ -32,20 +63,20 @@ export default function Home() {
           <CategoryList />
           <PromoCrousel />
           <Text style={styles.sectionTitle}>Deal of the Day</Text>
-          <TouchableNativeFeedback onPress={() => router.push("/(sample)/")}>
-            <Text > Go SAMPLE</Text>
-          </TouchableNativeFeedback>
+        
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <DealCard title="Women Printed Kurta" price="1500" discount="40%" rating="4.5" />
-            <DealCard title="HRX Sneakers" price="2499" discount="50%" rating="4.7" />
-            <DealCard title="HRX Sneakers" price="2499" discount="50%" rating="4.7" />
-            <DealCard title="HRX Sneakers" price="2499" discount="50%" rating="4.7" />
-            <DealCard title="HRX Sneakers" price="2499" discount="50%" rating="4.7" />
-            <DealCard title="HRX Sneakers" price="2499" discount="50%" rating="4.7" />
-            <DealCard title="HRX Sneakers" price="2499" discount="50%" rating="4.7" />
-            <DealCard title="HRX Sneakers" price="2499" discount="50%" rating="4.7" />
-            <DealCard title="HRX Sneakers" price="2499" discount="50%" rating="4.7" />
-            
+            {discountedProducts.map((product) => (
+              <DealCard 
+                key={product.id}
+                title={product.title || product.name}
+                price={product.price}
+                image={product.thumbnail}
+                discount={`${product.discountPercentage}%`}
+                rating={product.rating}
+                brand={product.brand}
+                stock={product.stock}
+              />
+            ))}
           </ScrollView>
           <SpecialOffer />
           <TrendingProducts />
